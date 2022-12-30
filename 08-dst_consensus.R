@@ -1,4 +1,7 @@
 
+
+# load libraries ----------------------------------------------------------
+
 library(tidyverse)
 library(sf)
 library(patchwork)
@@ -10,8 +13,9 @@ theme_set(theme_minimal())
 source(here::here('99-source_functions.R'))
 
 
-# side by side maps
+# import rankings ---------------------------------------------------------
 
+# ebird
 final_rankings_ebird <-
   read_rds(here::here('outputs/priority_watersheds_ebird.rds')) %>%
   select(huc_id, ecological_landscape, priority_watershed) %>%
@@ -23,6 +27,7 @@ final_rankings_ebird <-
   ) %>%
   rename(ebird_rank = priority_watershed)
 
+# expert
 final_rankings_expert <-
   read_rds(here::here('outputs/priority_watersheds_expert.rds')) %>%
   select(huc_id, ecological_landscape, priority_watershed) %>%
@@ -41,14 +46,17 @@ ecol <-
   layer = 'eco_landscapes'
 )
 
-# now combine
+
+# top watersheds ----------------------------------------------------------
+
+# combine expert and ebird
 top_watersheds <- 
   final_rankings_expert %>%
   left_join(., final_rankings_ebird %>% st_drop_geometry()) %>%
   # tidy up
   select(huc_id, ecological_landscape, expert_rank, ebird_rank, expert_top, ebird_top)
 
-# if consensus
+# if consensus (a watershed is top ranked by expert and ebird)
 top_watersheds <- 
   top_watersheds %>%
   mutate(
@@ -57,6 +65,9 @@ top_watersheds <-
       TRUE ~ 0
     )
   )
+
+
+# percent overlap (% watersheds by eco. landscape) ------------------------
 
 # percent overlap
 perc_overlap_df <- 
@@ -117,5 +128,10 @@ perc_overlap_statewide <-
   ) %>%
   # filter down to the % that are actually shared
   filter(consensus == 1)
+
+
+# overlap in eco landscapes -----------------------------------------------
+
+
 
 print('script 08 finished')

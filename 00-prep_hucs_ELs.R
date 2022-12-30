@@ -6,11 +6,7 @@ library(tidyverse)
 library(fs)
 library(sf)
 library(raster)
-library(tmap)
-library(exactextractr)
-library(patchwork)
 library(mapview)
-library(wesanderson)
 
 # set select and plotting
 select <- dplyr::select
@@ -99,7 +95,7 @@ huc_watersheds <-
   select(huc_id = 'huc12') %>% 
   group_by(huc_id) %>%
   summarise() %>%
-  # get rid of great lakes
+  # get rid of great lakes hucs
   filter(huc_id %ni% c('040203000300', '040602000000'))
 # see roughly square extent of watersheds
 plot(st_geometry(huc_watersheds))
