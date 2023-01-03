@@ -2,14 +2,11 @@
 
 # load libraries ----------------------------------------------------------
 
-library(rnaturalearth)
 library(tidyverse)
 library(sf)
 library(raster)
 library(ebirdst)
-library(mapview)
 library(fs)
-library(furrr)
 
 # housekeeping, load source functions
 select <- dplyr::select
@@ -29,9 +26,6 @@ packageVersion('ebirdst')
 
 
 # download status and trends data -----------------------------------------
-
-# view possible species to download status and trends here
-ebirdst_runs
 
 # create a dataframe of focal species (plus canvasback)
 spp <- 

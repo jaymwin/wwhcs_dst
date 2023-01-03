@@ -246,6 +246,7 @@ eco_landscapes$conservation_capital <-
 ggplot() +
   geom_sf(data = eco_landscapes, aes(fill = conservation_capital)) +
   scale_fill_viridis_c()
+ggsave(here::here('documentation/figures/eco_landscapes_cc.jpg'), width = 8, height = 5)
 
 # turn into quantiles
 eco_landscapes <- 
@@ -256,8 +257,9 @@ eco_landscapes %>%
   ggplot() +
   geom_sf(aes(fill = as.factor(cc_rank))) +
   # scale_fill_viridis_d() +
-  scale_fill_manual(values = c('dodgerblue', 'honeydew3', 'khaki1', 'orange', 'red'), name = 'CC rank') +
-  ggtitle('Conservation capital by ecological landscape - ebird')
+  scale_fill_manual(values = c('dodgerblue', 'honeydew3', 'khaki1', 'orange', 'red'), name = 'CC rank') # +
+  # ggtitle('Conservation capital by ecological landscape')
+ggsave(here::here('documentation/figures/eco_landscapes_cc_ranks.jpg'), width = 8, height = 5)
 
 
 # ecological landscapes - CO ----------------------------------------------
@@ -273,6 +275,7 @@ eco_landscapes$conservation_opportunity <-
 ggplot() +
   geom_sf(data = eco_landscapes, aes(fill = conservation_opportunity)) +
   scale_fill_viridis_c()
+ggsave(here::here('documentation/figures/eco_landscapes_co.jpg'), width = 8, height = 5)
 
 # turn into quantiles
 eco_landscapes <- 
@@ -283,8 +286,9 @@ eco_landscapes %>%
   ggplot() +
   geom_sf(aes(fill = as.factor(co_rank))) +
   # scale_fill_viridis_d() +
-  scale_fill_manual(values = c('dodgerblue', 'honeydew3', 'khaki1', 'orange', 'red'), name = 'CO rank') +
-  ggtitle('Conservation opportunity by ecological landscape - ebird')
+  scale_fill_manual(values = c('dodgerblue', 'honeydew3', 'khaki1', 'orange', 'red'), name = 'CO rank') # +
+  # ggtitle('Conservation opportunity by ecological landscape - ebird')
+ggsave(here::here('documentation/figures/eco_landscapes_co_ranks.jpg'), width = 8, height = 5)
 
 
 # huc 12s - CC ---------------------------------------------------
@@ -310,10 +314,11 @@ huc_watersheds %>%
 ggplot() +
   geom_sf(data = huc_watersheds, aes(fill = conservation_capital)) +
   scale_fill_viridis_c()
+ggsave(here::here('documentation/figures/huc_cc.jpg'), width = 8, height = 5)
 
-# view interactively
-huc_watersheds %>%
-  mapview(zcol = 'conservation_capital')
+# # view interactively
+# huc_watersheds %>%
+#   mapview(zcol = 'conservation_capital')
 
 # turn into quantiles
 huc_watersheds <- 
@@ -324,9 +329,9 @@ huc_watersheds <-
   mutate(cc_rank = ntile(conservation_capital, 4) - 1) %>%
   ungroup()
 
-# view interactively
-huc_watersheds %>%
-  mapview(zcol = 'cc_rank')
+# # view interactively
+# huc_watersheds %>%
+#   mapview(zcol = 'cc_rank')
 
 # plot it
 huc_cc_rank <- 
@@ -335,8 +340,9 @@ huc_cc_rank <-
   geom_sf(aes(fill = as.factor(cc_rank)), color = 'grey') +
   geom_sf(data = eco_landscapes, fill = NA, color = 'black', size = 1) +
   # scale_fill_viridis_d() +
-  scale_fill_manual(values = c('dodgerblue', 'darkolivegreen3', 'orange', 'red'), name = 'CC rank', na.translate = FALSE) +
-  ggtitle('CC rank by watershed - ebird')
+  scale_fill_manual(values = c('dodgerblue', 'darkolivegreen3', 'orange', 'red'), name = 'CC rank', na.translate = FALSE) # +
+  # ggtitle('CC rank by watershed - ebird')
+ggsave(here::here('documentation/figures/huc_cc_ranks.jpg'), width = 8, height = 5)
 
 
 # huc 12s - CO ------------------------------------------------------------
@@ -367,6 +373,7 @@ huc_watersheds$conservation_opportunity <-
 ggplot() +
   geom_sf(data = huc_watersheds, aes(fill = conservation_opportunity)) +
   scale_fill_viridis_c()
+ggsave(here::here('documentation/figures/huc_co.jpg'), width = 8, height = 5)
 
 # turn into quantiles
 huc_watersheds <- 
@@ -384,8 +391,9 @@ huc_co_rank <-
   geom_sf(aes(fill = as.factor(co_rank)), color = 'grey') +
   geom_sf(data = eco_landscapes, fill = NA, color = 'black', size = 1) +
   # scale_fill_viridis_d() +
-  scale_fill_manual(values = c('dodgerblue', 'darkolivegreen3', 'orange', 'red'), name = 'CO rank', na.translate = FALSE) +
-  ggtitle('CO rank by watershed - ebird')
+  scale_fill_manual(values = c('dodgerblue', 'darkolivegreen3', 'orange', 'red'), name = 'CO rank', na.translate = FALSE) # +
+  # ggtitle('CO rank by watershed - ebird')
+ggsave(here::here('documentation/figures/huc_co_ranks.jpg'), width = 8, height = 5)
 
 
 # priority landscapes -----------------------------------------------------
@@ -496,6 +504,9 @@ final_rank_ebird <-
   geom_sf(aes(fill = priority_watershed), color = 'grey', size = 0.1) +
   scale_fill_gradientn(colours = pal, name = 'Priority rank', n.breaks = 9) + 
   ggtitle('ebird')
+final_rank_ebird
+ggsave(here::here('documentation/figures/huc_priority_ranks.jpg'), width = 8, height = 5)
+
 
 # slivers again
 # final_product %>%
