@@ -62,6 +62,7 @@ eco_landscapes <-
 # these look fine
 ggplot() +
   geom_sf(data = eco_landscapes, aes(fill = ecological_landscape))
+ggsave(here::here('documentation/figures/eco_landscapes.jpg'), width = 8, height = 5)
 
 # nothing unusual here either
 ggplot() +
@@ -123,6 +124,7 @@ huc_watersheds <-
 ggplot() +
   geom_sf(data = huc_watersheds) + 
   geom_sf(data = wi_border, fill = NA, color = 'red')
+ggsave(here::here('documentation/figures/hucs_wi_border.jpg'), width = 8, height = 5)
 
 # mapview(wi_border) + mapview(huc_watersheds)
 
@@ -144,6 +146,7 @@ huc_watersheds <-
 ggplot() +
   geom_sf(data = huc_watersheds) + 
   geom_sf(data = wi_border, fill = NA, color = 'red')
+ggsave(here::here('documentation/figures/hucs_wi_border.jpg'), width = 5, height = 5)
 
 # check again interactively
 # huc_watersheds %>%
@@ -262,8 +265,13 @@ ggplot() +
   geom_sf(dat = huc_watersheds, aes(fill = ecological_landscape)) +
   facet_wrap(~ecological_landscape)
 
-ggplot() +
-  geom_sf(dat = huc_watersheds, aes(fill = ecological_landscape))
+# show watersheds and corresponding ecological landscapes again
+huc_watersheds %>% 
+  st_centroid() %>%
+  ggplot() +
+  geom_sf(data = huc_watersheds) +
+  geom_sf(aes(color = ecological_landscape))
+ggsave(here::here('documentation/figures/hucs_centroids.jpg'), width = 8, height = 5)
 
 # save
 huc_watersheds %>%
