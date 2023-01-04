@@ -342,6 +342,7 @@ huc_cc_rank <-
   # scale_fill_viridis_d() +
   scale_fill_manual(values = c('dodgerblue', 'darkolivegreen3', 'orange', 'red'), name = 'CC rank', na.translate = FALSE) # +
   # ggtitle('CC rank by watershed - ebird')
+huc_cc_rank
 ggsave(here::here('documentation/figures/huc_cc_ranks.jpg'), width = 8, height = 5)
 
 
@@ -393,6 +394,7 @@ huc_co_rank <-
   # scale_fill_viridis_d() +
   scale_fill_manual(values = c('dodgerblue', 'darkolivegreen3', 'orange', 'red'), name = 'CO rank', na.translate = FALSE) # +
   # ggtitle('CO rank by watershed - ebird')
+huc_co_rank
 ggsave(here::here('documentation/figures/huc_co_ranks.jpg'), width = 8, height = 5)
 
 

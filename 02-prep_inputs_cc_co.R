@@ -145,7 +145,7 @@ abundance_rasters_summary %>%
 
 # truncate counts ---------------------------------------------------------
 
-# calculate upper 99% percentile for each raster layer
+# calculate 99th percentile for each raster layer
 intervals <- 
   abundance_rasters_summary %>%
   group_by(layer) %>%
