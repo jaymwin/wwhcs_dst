@@ -6,7 +6,7 @@ library(fs)
 scripts <- 
   dir_ls(here::here(), glob = '*.R') %>%
   as_tibble() %>%
-  slice(3:10) %>%
+  slice(1:10) %>%
   pull(value)
 
 # run workflow in order

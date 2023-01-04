@@ -354,30 +354,44 @@ seasonal_weights_df <-
   'rndu', 'spring', 0.14,
 )
 
-# fuzzy_abundance <- 
-#   dir_ls(here::here('data/rasters_from_ebirdst_truncated'), glob = '*fuzzy.tif') %>%
-#   stack()
-# plot(fuzzy_abundance)
+fuzzy_abundance <-
+  dir_ls(here::here('data/rasters_from_ebirdst_truncated'), glob = '*fuzzy.tif') %>%
+  stack()
+plot(fuzzy_abundance)
 
-# names_to_keep <- c(
-#   'bwte_breeding',
-#   'bwte_fall',
-#   'bwte_spring',
-#   'mall_breeding',
-#   'mall_fall',
-#   'mall_spring',
-#   'rndu_breeding',
-#   'rndu_fall',
-#   'rndu_spring',
-#   'wodu_breeding',
-#   'wodu_fall',
-#   'wodu_spring'
-# ) %>%
-#   str_flatten(collapse = '|')
-# 
-# names(fuzzy_abundance) <- 
-#   names(fuzzy_abundance) %>% 
-#   str_extract(names_to_keep)
+names_to_keep <- c(
+  'bwte_breeding',
+  'bwte_fall',
+  'bwte_spring',
+  'mall_breeding',
+  'mall_fall',
+  'mall_spring',
+  'rndu_breeding',
+  'rndu_fall',
+  'rndu_spring',
+  'wodu_breeding',
+  'wodu_fall',
+  'wodu_spring'
+) %>%
+  str_flatten(collapse = '|')
+
+names(fuzzy_abundance) <-
+  names(fuzzy_abundance) %>%
+  str_extract(names_to_keep)
+
+plot(fuzzy_abundance)
+
+fuzzy_abundance_stars <- fuzzy_abundance %>%
+  st_as_stars()
+
+ggplot() +
+  geom_stars(data = fuzzy_abundance_stars) +
+  geom_sf(data = wi_border %>% st_transform(st_crs(bio_layers)), fill = NA, size = 0.1) +
+  facet_wrap(~band, ncol = 3) +
+  theme_minimal() +
+  theme(axis.text = element_blank(), axis.title = element_blank()) +
+  scale_fill_viridis_c(name = 'Value', na.value = NA, option = 'cividis')
+ggsave(here::here('documentation/figures/ebird_distributions.jpg'), height = 5, width = 4, units = 'in')
 
 # tm <- tm_shape(fuzzy_abundance) +
 #   tm_raster(style = 'cont', palette = 'viridis', title = 'Value', legend.reverse = TRUE) +
@@ -443,6 +457,23 @@ for (i in seq_along(seasons)) {
 }
 
 
+ebird_seasonal_distributions <- dir_ls(here::here('data/ebird_inputs/ebird_cc_inputs'), glob = '*distribution_fuzzy.tif') %>%
+  stack()
+names(ebird_seasonal_distributions) <- c('Breeding', 'Fall', 'Spring')
+
+ebird_seasonal_distributions_stars <- ebird_seasonal_distributions %>%
+  st_as_stars()
+
+ggplot() +
+  geom_stars(data = ebird_seasonal_distributions_stars) +
+  geom_sf(data = wi_border %>% st_transform(st_crs(bio_layers)), fill = NA) +
+  facet_wrap(~band) +
+  theme_minimal() +
+  theme(axis.text = element_blank(), axis.title = element_blank()) +
+  scale_fill_viridis_c(name = 'Value', na.value = NA)
+ggsave(here::here('documentation/figures/cc_inputs.jpg'), height = 2, width = 6, units = 'in')
+
+
 # create breeding habitat potential layer ---------------------------------
 
 # use breeding distribution on 0-1 scale
@@ -487,6 +518,18 @@ plot(stack(breeding_season_distribution, prw, breeding_potential))
 # rescale between 0 and 1
 breeding_potential_rescaled <- calc(breeding_potential, fun = rescale_01)
 plot(breeding_potential_rescaled)
+
+breeding_potential_rescaled_stars <- breeding_potential_rescaled %>%
+  st_as_stars()
+
+ggplot() +
+  geom_stars(data = breeding_potential_rescaled_stars) +
+  geom_sf(data = wi_border %>% st_transform(st_crs(bio_layers)), fill = NA) +
+  theme_minimal() +
+  theme(axis.text = element_blank(), axis.title = element_blank()) +
+  scale_fill_viridis_c(name = 'Value', na.value = NA, option = 'magma')
+ggsave(here::here('documentation/figures/breeding_potential_rescaled.jpg'), height = 3.75, width = 4, units = 'in')
+
 
 # tm_shape(breeding_potential_rescaled) +
 #   tm_raster(style = 'cont', palette = 'viridis')

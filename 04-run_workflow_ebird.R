@@ -74,6 +74,7 @@ cc_inputs_stack <-
   raster::crop(., wi_transformed) %>% # crop by WI border
   raster::mask(., wi_transformed)
 plot(cc_inputs_stack)
+cc_inputs_stack
 
 cc_inputs_stack[[2]]
 
@@ -109,6 +110,22 @@ ggplot() +
   scale_fill_viridis_c(name = 'Value', na.value = NA)
 ggsave(here::here('figures/cc_inputs.png'), height = 3, width = 6, units = 'in', dpi = 600)
 
+cc <- cc_inputs_stack
+names(cc) <- c('Breeding distribution', 'Ecological services provided', 'Fall distribution',
+               'Hunter distribution', 'Spring distribution')
+
+cc_layers_stars <- cc %>%
+  st_as_stars()
+
+ggplot() +
+  geom_stars(data = cc_layers_stars) +
+  geom_sf(data = wi_border %>% st_transform(st_crs(cc_layers_stars)), fill = NA, size = 0.25) +
+  facet_wrap(~band) +
+  theme_minimal() +
+  theme(axis.text = element_blank(), axis.title = element_blank()) +
+  scale_fill_viridis_c(name = 'Value', na.value = NA)
+ggsave(here::here('documentation/figures/cc_input_rasters.jpg'), height = 3.75, width = 4, units = 'in')
+
 # define weights (these follow the order of rasters in the stack)
 cc_weights <- 
   cc_inputs %>%
@@ -132,6 +149,17 @@ plot(cc_layer)
  
 cc_layer_rescaled <- calc(cc_layer, fun = rescale_01)
 plot(cc_layer_rescaled)
+
+cc_layer_rescaled_stars <- cc_layer_rescaled %>%
+  st_as_stars()
+
+ggplot() +
+  geom_stars(data = cc_layer_rescaled_stars) +
+  geom_sf(data = wi_border %>% st_transform(st_crs(cc_layer_rescaled_stars)), fill = NA, size = 0.25) +
+  theme_minimal() +
+  theme(axis.text = element_blank(), axis.title = element_blank()) +
+  scale_fill_viridis_c(name = 'Value', na.value = NA)
+ggsave(here::here('documentation/figures/conservation_capital_raster.jpg'), width = 5, height = 4, units = 'in')
 
 # save (then re-scale with fuzzy membership in arcgis pro)
 cc_layer_rescaled %>%
@@ -176,6 +204,21 @@ co_inputs_stack <-
   stack()
 plot(co_inputs_stack)
 
+co <- co_inputs_stack
+names(co) <- c('Breeding habitat potential', 'Ecological services potential', 'Resource user distribution')
+
+co_layers_stars <- co %>%
+  st_as_stars()
+
+ggplot() +
+  geom_stars(data = co_layers_stars) +
+  geom_sf(data = wi_border %>% st_transform(st_crs(co_layers_stars)), fill = NA, size = 0.25) +
+  facet_wrap(~band) +
+  theme_minimal() +
+  theme(axis.text = element_blank(), axis.title = element_blank()) +
+  scale_fill_viridis_c(name = 'Value', na.value = NA, option = 'magma')
+ggsave(here::here('documentation/figures/co_input_rasters.jpg'), height = 3, width = 8, units = 'in')
+
 tm <- tm_shape(co_inputs_stack) +
   tm_raster(style = 'cont', palette = 'viridis', title = 'Value', legend.reverse = TRUE)
 tm
@@ -201,6 +244,17 @@ plot(co_layer)
 # rescale between 0 and 1
 co_layer_rescaled <- calc(co_layer, fun = rescale_01)
 plot(co_layer_rescaled)
+
+co_layer_rescaled_stars <- co_layer_rescaled %>%
+  st_as_stars()
+
+ggplot() +
+  geom_stars(data = co_layer_rescaled_stars) +
+  geom_sf(data = wi_border %>% st_transform(st_crs(co_layer_rescaled_stars)), fill = NA, size = 0.25) +
+  theme_minimal() +
+  theme(axis.text = element_blank(), axis.title = element_blank()) +
+  scale_fill_viridis_c(name = 'Value', na.value = NA, option = 'magma')
+ggsave(here::here('documentation/figures/conservation_opportunity_raster.jpg'), height = 3.75, width = 4, units = 'in')
 
 # save (then re-scale with fuzzy membership in arcgis pro)
 co_layer_rescaled %>%
@@ -245,7 +299,7 @@ eco_landscapes$conservation_capital <-
 
 ggplot() +
   geom_sf(data = eco_landscapes, aes(fill = conservation_capital)) +
-  scale_fill_viridis_c()
+  scale_fill_viridis_c(option = 'viridis')
 ggsave(here::here('documentation/figures/eco_landscapes_cc.jpg'), width = 8, height = 5)
 
 # turn into quantiles
@@ -256,9 +310,7 @@ eco_landscapes <-
 eco_landscapes %>%
   ggplot() +
   geom_sf(aes(fill = as.factor(cc_rank))) +
-  # scale_fill_viridis_d() +
-  scale_fill_manual(values = c('dodgerblue', 'honeydew3', 'khaki1', 'orange', 'red'), name = 'CC rank') # +
-  # ggtitle('Conservation capital by ecological landscape')
+  scale_fill_viridis_d(option = 'viridis', name = 'CC rank')
 ggsave(here::here('documentation/figures/eco_landscapes_cc_ranks.jpg'), width = 8, height = 5)
 
 
@@ -274,7 +326,7 @@ eco_landscapes$conservation_opportunity <-
 
 ggplot() +
   geom_sf(data = eco_landscapes, aes(fill = conservation_opportunity)) +
-  scale_fill_viridis_c()
+  scale_fill_viridis_c(option = 'magma')
 ggsave(here::here('documentation/figures/eco_landscapes_co.jpg'), width = 8, height = 5)
 
 # turn into quantiles
@@ -285,9 +337,7 @@ eco_landscapes <-
 eco_landscapes %>%
   ggplot() +
   geom_sf(aes(fill = as.factor(co_rank))) +
-  # scale_fill_viridis_d() +
-  scale_fill_manual(values = c('dodgerblue', 'honeydew3', 'khaki1', 'orange', 'red'), name = 'CO rank') # +
-  # ggtitle('Conservation opportunity by ecological landscape - ebird')
+  scale_fill_viridis_d(option = 'magma', name = 'CO rank')
 ggsave(here::here('documentation/figures/eco_landscapes_co_ranks.jpg'), width = 8, height = 5)
 
 
@@ -312,9 +362,10 @@ huc_watersheds %>%
 
 # plot cc ranks by watershed
 ggplot() +
-  geom_sf(data = huc_watersheds, aes(fill = conservation_capital)) +
-  scale_fill_viridis_c()
-ggsave(here::here('documentation/figures/huc_cc.jpg'), width = 8, height = 5)
+  geom_sf(data = huc_watersheds, aes(fill = conservation_capital), size = 0.1) +
+  geom_sf(data = eco_landscapes, fill = NA, color = 'black', size = 0.25) +
+  scale_fill_viridis_c(option = 'viridis')
+ggsave(here::here('documentation/figures/huc_cc.jpg'), width = 5, height = 4)
 
 # # view interactively
 # huc_watersheds %>%
@@ -337,13 +388,13 @@ huc_watersheds <-
 huc_cc_rank <- 
   huc_watersheds %>%
   ggplot() +
-  geom_sf(aes(fill = as.factor(cc_rank)), color = 'grey') +
-  geom_sf(data = eco_landscapes, fill = NA, color = 'black', size = 1) +
-  # scale_fill_viridis_d() +
-  scale_fill_manual(values = c('dodgerblue', 'darkolivegreen3', 'orange', 'red'), name = 'CC rank', na.translate = FALSE) # +
+  geom_sf(aes(fill = as.factor(cc_rank)), color = 'grey', size = 0.1) +
+  geom_sf(data = eco_landscapes, fill = NA, color = 'black', size = 0.25) +
+  scale_fill_viridis_d(option = 'viridis', name = 'CC rank') # +
+  # scale_fill_manual(values = c('dodgerblue', 'darkolivegreen3', 'orange', 'red'), name = 'CC rank', na.translate = FALSE) # +
   # ggtitle('CC rank by watershed - ebird')
 huc_cc_rank
-ggsave(here::here('documentation/figures/huc_cc_ranks.jpg'), width = 8, height = 5)
+ggsave(here::here('documentation/figures/huc_cc_ranks.jpg'), width = 5, height = 4)
 
 
 # huc 12s - CO ------------------------------------------------------------
@@ -372,9 +423,10 @@ huc_watersheds$conservation_opportunity <-
 
 # plot co mean by watershed
 ggplot() +
-  geom_sf(data = huc_watersheds, aes(fill = conservation_opportunity)) +
-  scale_fill_viridis_c()
-ggsave(here::here('documentation/figures/huc_co.jpg'), width = 8, height = 5)
+  geom_sf(data = huc_watersheds, aes(fill = conservation_opportunity), size = 0.1) +
+  geom_sf(data = eco_landscapes, fill = NA, color = 'black', size = 0.25) +
+  scale_fill_viridis_c(option = 'magma')
+ggsave(here::here('documentation/figures/huc_co.jpg'), width = 5, height = 4)
 
 # turn into quantiles
 huc_watersheds <- 
@@ -383,19 +435,19 @@ huc_watersheds <-
   mutate(co_rank = ntile(conservation_opportunity, 4) - 1) %>%
   ungroup()
 
-huc_watersheds %>%
-  mapview(zcol = 'co_rank')
+# huc_watersheds %>%
+#   mapview(zcol = 'co_rank')
 
 huc_co_rank <- 
   huc_watersheds %>%
   ggplot() +
-  geom_sf(aes(fill = as.factor(co_rank)), color = 'grey') +
-  geom_sf(data = eco_landscapes, fill = NA, color = 'black', size = 1) +
-  # scale_fill_viridis_d() +
-  scale_fill_manual(values = c('dodgerblue', 'darkolivegreen3', 'orange', 'red'), name = 'CO rank', na.translate = FALSE) # +
+  geom_sf(aes(fill = as.factor(co_rank)), color = 'grey', size = 0.1) +
+  geom_sf(data = eco_landscapes, fill = NA, color = 'black', size = 0.25) +
+  scale_fill_viridis_d(option = 'magma', name = 'CO rank') # +
+  # scale_fill_manual(values = c('dodgerblue', 'darkolivegreen3', 'orange', 'red'), name = 'CO rank', na.translate = FALSE) # +
   # ggtitle('CO rank by watershed - ebird')
 huc_co_rank
-ggsave(here::here('documentation/figures/huc_co_ranks.jpg'), width = 8, height = 5)
+ggsave(here::here('documentation/figures/huc_co_ranks.jpg'), width = 5, height = 4)
 
 
 # priority landscapes -----------------------------------------------------
@@ -417,14 +469,16 @@ eco_landscapes <-
 eco_rank <- 
   eco_landscapes %>%
   ggplot() +
-  geom_sf(aes(fill = as.factor(priority_landscape)), color = 'grey') +
-  geom_sf(data = eco_landscapes, fill = NA, color = 'black', size = 1) +
-  # scale_fill_viridis_d() +
-  scale_fill_manual(values = c('red', 'khaki1', 'dodgerblue'), name = 'Priority rank') +
-  ggtitle('Priority landscapes - ebird')
+  geom_sf(aes(fill = as.factor(priority_landscape)), color = 'black', size = 0.25) +
+  # geom_sf(data = eco_landscapes, fill = NA, color = 'black', size = 0.25) +
+  scale_fill_viridis_d(option = 'plasma', name = 'Priority rank', direction = -1) # +
+  # scale_fill_manual(values = c('red', 'khaki1', 'dodgerblue'), name = 'Priority rank') +
+  # ggtitle('Priority landscapes - ebird')
+eco_rank
+ggsave(here::here('documentation/figures/eco_landscape_priority_ranks.jpg'), width = 5, height = 4)
 
-eco_landscapes %>%
-  mapview(zcol = 'priority_landscape')
+# eco_landscapes %>%
+#   mapview(zcol = 'priority_landscape')
 
 eco_landscapes %>%
   mutate(source = 'ebird') %>%
@@ -497,17 +551,19 @@ final_product %>%
 
 
 # create a similar color palette to the one used in report/paper
-pal <- wes_palette("Zissou1", 9, type = "continuous")
+# pal <- wes_palette("Zissou1", 9, type = "continuous")
 
 # and a look at final scores
 final_rank_ebird <- 
   final_product %>%
   ggplot() +
-  geom_sf(aes(fill = priority_watershed), color = 'grey', size = 0.1) +
-  scale_fill_gradientn(colours = pal, name = 'Priority rank', n.breaks = 9) + 
-  ggtitle('ebird')
+  geom_sf(aes(fill = as.factor(priority_watershed)), color = 'grey', size = 0.1) +
+  geom_sf(data = eco_landscapes, fill = NA, color = 'black', size = 0.25) +
+  scale_fill_viridis_d(option = 'plasma', name = 'Priority rank')
+  # scale_fill_gradientn(colours = pal, name = 'Priority rank', n.breaks = 9) + 
+  # ggtitle('ebird')
 final_rank_ebird
-ggsave(here::here('documentation/figures/huc_priority_ranks.jpg'), width = 8, height = 5)
+ggsave(here::here('documentation/figures/huc_priority_ranks.jpg'), width = 5, height = 4)
 
 
 # slivers again
