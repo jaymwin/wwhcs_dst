@@ -484,31 +484,6 @@ plot(breeding_potential)
 
 plot(stack(breeding_season_distribution, prw, breeding_potential))
 
-
-# hist(raster::values(breeding_potential))
-# 
-# breeding_potential_rescaled <- calc(breeding_potential, fun = rescale_01)
-# plot(breeding_potential_rescaled)
-# 
-# tm_shape(breeding_potential_rescaled) +
-#   tm_raster(style = 'cont', palette = 'viridis')
-# 
-# hist(raster::values(breeding_potential_rescaled))
-# 
-# # ok, some 'extreme' values we might want to remove (or re-classify)
-# breeding_potential %>%
-#   raster::values(.) %>%
-#   median_qi(na.rm = TRUE)
-# 
-# # calculate X% CIs
-# upper_interval <- breeding_potential %>%
-#   raster::values(.) %>%
-#   tidybayes::point_interval(.width = 0.95, na.rm = TRUE) %>%
-#   pull(ymax)
-# 
-# breeding_potential[breeding_potential > upper_interval] <- upper_interval
-# plot(breeding_potential)
-
 # rescale between 0 and 1
 breeding_potential_rescaled <- calc(breeding_potential, fun = rescale_01)
 plot(breeding_potential_rescaled)
