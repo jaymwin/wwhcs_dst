@@ -2,14 +2,14 @@
 library(tidyverse)
 library(fs)
 
-# locate scripts to run analysis
+# locate scripts to run workflow
 scripts <- 
   dir_ls(here::here(), glob = '*.R') %>%
   as_tibble() %>%
   slice(1:10) %>%
   pull(value)
 
-# run analysis in order
+# run workflow in order
 tictoc::tic()
 scripts %>%
   walk(., source)
