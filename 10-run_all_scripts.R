@@ -10,6 +10,7 @@ scripts <-
   pull(value)
 
 # run analysis in order
+tictoc::tic()
 scripts %>%
   walk(., source)
-
+tictoc::toc()
