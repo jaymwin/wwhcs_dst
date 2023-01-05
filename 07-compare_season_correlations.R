@@ -121,7 +121,7 @@ huc_watersheds[[1]]$expert <-
   exact_extract(
     expert_distribution_stack[[2]], 
     huc_watersheds[[1]], 
-    'median'
+    'mean'
   )
 
 # fall - expert
@@ -129,7 +129,7 @@ huc_watersheds[[2]]$expert <-
   exact_extract(
     expert_distribution_stack[[1]], 
     huc_watersheds[[2]], 
-    'median'
+    'mean'
   )
 
 # spring - expert
@@ -137,7 +137,7 @@ huc_watersheds[[3]]$expert <-
   exact_extract(
     expert_distribution_stack[[3]], 
     huc_watersheds[[3]], 
-    'median'
+    'mean'
   )
 
 # breeding - ebird
@@ -145,7 +145,7 @@ huc_watersheds[[1]]$ebird <-
   exact_extract(
     ebird_distribution_stack[[1]], 
     huc_watersheds[[1]], 
-    'median'
+    'mean'
   )
 
 # fall - ebird
@@ -153,7 +153,7 @@ huc_watersheds[[2]]$ebird <-
   exact_extract(
     ebird_distribution_stack[[2]], 
     huc_watersheds[[2]], 
-    'median'
+    'mean'
   )
 
 # spring - ebird
@@ -161,7 +161,7 @@ huc_watersheds[[3]]$ebird <-
   exact_extract(
     ebird_distribution_stack[[3]], 
     huc_watersheds[[3]], 
-    'median'
+    'mean'
   )
 
 # re-combine
