@@ -363,8 +363,7 @@ posterior_correlations <-
   # scale_fill_okabe_ito() +
   scale_y_reordered() +
   # expression(bar(rho)))
-  # labs(x = expression(rho), y = 'Ecological landscape') +
-  labs(x = expression(bar(rho))), y = 'Ecological landscape') +
+  labs(x = expression(rho), y = 'Ecological landscape') +
   geom_vline(aes(xintercept = 0), linetype = 2) +
   guides(fill = 'none') +
   xlim(c(-1, 1)) +
@@ -407,7 +406,8 @@ spatial_correlation_plot <-
   ggplot() +
   geom_sf(aes(fill = correlation), size = 0.2) +
   geom_sf(data = wi_border %>% st_transform(st_crs(eco_correlations)), fill = NA, size = 0.3) +
-  scale_fill_scico(palette = 'bam', name = expression(rho), limits = c(-0.60, 0.80), breaks = c(-0.5, 0, 0.5)) +
+  # scale_fill_scico(palette = 'bam', name = expression(rho), limits = c(-0.60, 0.80), breaks = c(-0.5, 0, 0.5)) +
+  scale_fill_scico(palette = 'bam', name = expression(bar(rho))), limits = c(-0.60, 0.80), breaks = c(-0.5, 0, 0.5)) +
   # scale_fill_scico(palette = 'roma', name = expression(rho), direction = -1) +
   # scale_fill_gradientn(colours = c("blue", "white", "red"), name = expression(rho), limits = c(-0.8, 0.8)) +
   facet_wrap(~season) +
