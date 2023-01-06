@@ -1,5 +1,7 @@
 
 
+# load libraries ----------------------------------------------------------
+
 library(ggsflabel)
 library(tidyverse)
 library(sf)
@@ -13,7 +15,7 @@ library(tidybayes)
 # study area map ----------------------------------------------------------
 
 # 453
-set.seed(123)
+set.seed(456)
 
 huc_watersheds <- 
   read_sf(
@@ -360,7 +362,9 @@ posterior_correlations <-
   stat_halfeye(.width = c(0, 0.95), point_interval = mean_qi, point_size = 1) +
   # scale_fill_okabe_ito() +
   scale_y_reordered() +
-  labs(x = expression(rho), y = 'Ecological landscape') +
+  # expression(bar(rho)))
+  # labs(x = expression(rho), y = 'Ecological landscape') +
+  labs(x = expression(bar(rho))), y = 'Ecological landscape') +
   geom_vline(aes(xintercept = 0), linetype = 2) +
   guides(fill = 'none') +
   xlim(c(-1, 1)) +
