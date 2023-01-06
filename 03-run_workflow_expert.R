@@ -63,12 +63,6 @@ cc_inputs_stack <-
   stack()
 plot(cc_inputs_stack)
 
-range(raster::values(cc_inputs_stack[[1]]), na.rm = TRUE)
-range(raster::values(cc_inputs_stack[[2]]), na.rm = TRUE)
-range(raster::values(cc_inputs_stack[[3]]), na.rm = TRUE)
-range(raster::values(cc_inputs_stack[[4]]), na.rm = TRUE)
-range(raster::values(cc_inputs_stack[[5]]), na.rm = TRUE)
-
 # save plot here as well
 tm <- tm_shape(cc_inputs_stack) +
   tm_raster(style = 'cont', palette = 'viridis', title = 'Value', legend.reverse = TRUE)

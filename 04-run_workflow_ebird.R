@@ -161,7 +161,7 @@ ggplot() +
   scale_fill_viridis_c(name = 'Value', na.value = NA)
 ggsave(here::here('documentation/figures/conservation_capital_raster.jpg'), height = 3.75, width = 4, units = 'in')
 
-# save (then re-scale with fuzzy membership in arcgis pro)
+# save
 cc_layer_rescaled %>%
   writeRaster(
     .,
@@ -224,6 +224,7 @@ tm <- tm_shape(co_inputs_stack) +
 tm
 # tmap_save(tm, here::here('figures/ebird_co_inputs.png'), width = 5000, height = 3000, dpi = 1000)
 
+# set CO weights (in order of layers in raster stack)
 co_weights <- 
   co_inputs %>%
   mutate(
