@@ -10,12 +10,14 @@ library(scico)
 library(stars)
 library(patchwork)
 library(tidybayes)
+library(tidytext)
 
+source(here::here('99-source_functions.R'))
 
 # study area map ----------------------------------------------------------
 
 # 453
-set.seed(456)
+set.seed(999)
 
 huc_watersheds <- 
   read_sf(
@@ -24,7 +26,8 @@ huc_watersheds <-
   )
 
 # tidy up
-eco_landscapes <- read_sf(here::here('data/shapefiles/ecological_landscapes.shp')) %>%
+eco_landscapes <- 
+  read_sf(here::here('data/shapefiles/ecological_landscapes.shp')) %>%
   st_transform(., crs = 4326) %>%
   rename(ecological_landscape = 'ECO_LAND_1') %>%
   # there's a sliver along the Mississippi River that shouldn't be western coulees/ridges
@@ -58,7 +61,6 @@ eco_centroid <- eco_centroid %>%
   st_centroid(of_largest_polygon = TRUE) %>%
   mutate(name = as.factor(row_number()))
 eco_centroid
-
 
 blah <- tibble(
   ecological_landscape = 'Superior Coastal Plain',
@@ -121,6 +123,7 @@ p_eco <-
   geom_sf_text(data = eco_centroid, aes(label = name), size = 1.5) +
   guides(fill = 'none') +
   # ggtitle('A)') +
+  theme_minimal() +
   theme(axis.text = element_blank(), axis.title = element_blank())
 p_eco
 
@@ -133,6 +136,7 @@ p_huc <-
   scale_fill_viridis_d(name = 'Ecological Landscape') +
   guides(fill = 'none') +
   # ggtitle('B)') +
+  theme_minimal() +
   theme(axis.text = element_blank())
 
 p_eco + p_huc + plot_annotation(tag_levels = 'A')
@@ -296,7 +300,7 @@ b_plot <-
   filter(season == 'breeding') %>%
   mutate(ecological_landscape = reorder(ecological_landscape, value)) %>%
   ggplot(aes(x = value, y = ecological_landscape)) +
-  stat_halfeye(.width = c(0, 0.95), point_interval = mean_qi, fill = palette_okabe_ito(order = 3), point_size = 1) +
+  stat_halfeye(.width = c(0.95), point_interval = mean_qi, point_size = 1) +
   labs(x = NULL, y = 'Ecological landscape') +
   geom_vline(aes(xintercept = 0), linetype = 2) +
   guides(fill = 'none') +
@@ -315,8 +319,7 @@ f_plot <-
   filter(season == 'fall') %>%
   mutate(ecological_landscape = reorder(ecological_landscape, value)) %>%
   ggplot(aes(x = value, y = ecological_landscape, fill = season)) +
-  stat_halfeye(.width = c(0, 0.95), point_interval = mean_qi, fill = palette_okabe_ito(order = 5), point_size = 1) +
-  scale_fill_okabe_ito() +
+  stat_halfeye(.width = c(0, 0.95), point_interval = mean_qi, point_size = 1) +
   labs(x = expression(rho), y = NULL) +
   geom_vline(aes(xintercept = 0), linetype = 2) +
   guides(fill = 'none') +
@@ -335,8 +338,7 @@ s_plot <-
   filter(season == 'spring') %>%
   mutate(ecological_landscape = reorder(ecological_landscape, value)) %>%
   ggplot(aes(x = value, y = ecological_landscape, fill = season)) +
-  stat_halfeye(.width = c(0, 0.95), point_interval = mean_qi, fill = palette_okabe_ito(order = 6), point_size = 1) +
-  scale_fill_okabe_ito() +
+  stat_halfeye(.width = c(0, 0.95), point_interval = mean_qi, point_size = 1) +
   labs(x = NULL, y = NULL) +
   geom_vline(aes(xintercept = 0), linetype = 2) +
   guides(fill = 'none') +
@@ -369,6 +371,7 @@ posterior_correlations <-
   xlim(c(-1, 1)) +
   # ggtitle('Fall') +
   # theme_minimal(base_size = 14) +
+  theme_minimal() +
   theme(panel.grid.minor = element_blank(), axis.text.y = element_blank()) +
   facet_wrap(~str_to_title(season), scales = 'free_y')
 # ggsave(here::here('figures/rho_season.png'), height = 6, width = 12, units = 'in', dpi = 1000)
@@ -394,10 +397,9 @@ eco_correlations <-
 eco_correlations %>%
   print(n=Inf)
 
-# plot and save
-
 # use range for scale limits
 range(eco_correlations$correlation)
+limit <- max(abs(eco_correlations$correlation)) * c(-1, 1)
 
 spatial_correlation_plot <- 
   eco_correlations %>%
@@ -407,10 +409,11 @@ spatial_correlation_plot <-
   geom_sf(aes(fill = correlation), size = 0.2) +
   geom_sf(data = wi_border %>% st_transform(st_crs(eco_correlations)), fill = NA, size = 0.3) +
   # scale_fill_scico(palette = 'bam', name = expression(rho), limits = c(-0.60, 0.80), breaks = c(-0.5, 0, 0.5)) +
-  scale_fill_scico(palette = 'bam', name = expression(bar(rho))), limits = c(-0.60, 0.80), breaks = c(-0.5, 0, 0.5)) +
+  scale_fill_scico(palette = 'bam', name = expression(bar(rho)), limit = limit) +
   # scale_fill_scico(palette = 'roma', name = expression(rho), direction = -1) +
   # scale_fill_gradientn(colours = c("blue", "white", "red"), name = expression(rho), limits = c(-0.8, 0.8)) +
   facet_wrap(~season) +
+  theme_minimal() +
   theme(
     axis.text = element_blank(),
     # strip.background = element_blank(),
@@ -490,6 +493,7 @@ p1 <-
     # title = 'Priority rank',
     reverse = TRUE)
   ) +
+  theme_minimal() +
   theme(axis.text = element_blank()) +
   facet_wrap(~source)
 p1
@@ -501,7 +505,8 @@ ggplot() +
   geom_sf(data = top_final_product %>% filter(top_watershed == TRUE) %>% st_transform(., 3071), aes(fill = top_watershed), color = 'grey', size = 0.1) +
   geom_sf(data = ecol %>% st_transform(., 3071), fill = NA, color = 'black', size = 0.4) +
   # scale_fill_manual(values = c('white', '#009E73'), name = 'Top\nwatershed') +
-  scale_fill_okabe_ito(order = c(3), name = 'Top\nwatershed') +
+  ggokabeito::scale_fill_okabe_ito(order = c(3), name = 'Top\nwatershed') +
+  theme_minimal() +
   theme(axis.text = element_blank()) +
   facet_wrap(~source) # +
 # guides(fill = 'none')
@@ -526,6 +531,7 @@ p2 <-
     size = 2
   ) +
   scale_fill_viridis_d(option = 'E', name = 'DST') +
+  theme_minimal() +
   # + other title / theme options
   ylim(c(0, 330)) +
   coord_flip() +
