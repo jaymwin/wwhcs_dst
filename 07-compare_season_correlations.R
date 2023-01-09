@@ -231,7 +231,7 @@ huc_watersheds %>%
   group_by(ecological_landscape, season) %>%
   mean_qi(value) %>%
   arrange(season, value) %>%
-  print(n=Inf)
+  write_csv(here::here('outputs/cc_correlations.csv'))
 
 # all considered 'strongly' correlated
 huc_watersheds %>%
