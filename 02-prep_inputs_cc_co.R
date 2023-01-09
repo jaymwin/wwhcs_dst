@@ -387,7 +387,7 @@ fuzzy_abundance_stars <- fuzzy_abundance %>%
 
 ggplot() +
   geom_stars(data = fuzzy_abundance_stars) +
-  geom_sf(data = wi_border %>% st_transform(st_crs(bio_layers)), fill = NA, size = 0.1) +
+  geom_sf(data = wi_border %>% st_transform(st_crs(fuzzy_abundance_stars)), fill = NA, size = 0.1) +
   facet_wrap(~band, ncol = 3) +
   theme_minimal() +
   theme(axis.text = element_blank(), axis.title = element_blank()) +
@@ -467,7 +467,7 @@ ebird_seasonal_distributions_stars <- ebird_seasonal_distributions %>%
 
 ggplot() +
   geom_stars(data = ebird_seasonal_distributions_stars) +
-  geom_sf(data = wi_border %>% st_transform(st_crs(bio_layers)), fill = NA) +
+  geom_sf(data = wi_border %>% st_transform(st_crs(ebird_seasonal_distributions_stars)), fill = NA) +
   facet_wrap(~band) +
   theme_minimal() +
   theme(axis.text = element_blank(), axis.title = element_blank()) +
@@ -525,7 +525,7 @@ breeding_potential_rescaled_stars <- breeding_potential_rescaled %>%
 
 ggplot() +
   geom_stars(data = breeding_potential_rescaled_stars) +
-  geom_sf(data = wi_border %>% st_transform(st_crs(bio_layers)), fill = NA) +
+  geom_sf(data = wi_border %>% st_transform(st_crs(breeding_potential_rescaled_stars)), fill = NA) +
   theme_minimal() +
   theme(axis.text = element_blank(), axis.title = element_blank()) +
   scale_fill_viridis_c(name = 'Value', na.value = NA, option = 'magma')
