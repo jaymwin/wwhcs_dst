@@ -9,6 +9,7 @@ library(ebirdst)
 library(mapview)
 library(fs)
 # library(tidybayes)
+library(stars)
 library(patchwork)
 
 # housekeeping stuff
