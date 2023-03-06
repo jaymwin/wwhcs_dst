@@ -426,6 +426,12 @@ spatial_correlation_plot <-
 posterior_correlations / spatial_correlation_plot + plot_annotation(tag_levels = 'A')
 ggsave(here::here('figures/post_cor_and_map.png'), height = 5.5, width = 6, units = 'in', dpi = 600)
 
+spatial_correlation_plot
+ggsave(here::here('figures/spatial_correlation_plot_presentation.png'), height = 2.5, width = 6, units = 'in')
+
+posterior_correlations
+ggsave(here::here('figures/posterior_correlations_presentation.png'), height = 3, width = 6, units = 'in')
+
 
 # dst ranking maps --------------------------------------------------------
 

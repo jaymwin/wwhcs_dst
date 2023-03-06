@@ -136,6 +136,37 @@ huc_cc_rank <-
   ggtitle('CC') +
   theme(axis.text = element_blank())
 
+huc_watersheds %>%
+  ggplot() +
+  geom_sf(aes(fill = as.factor(cc_1_3)), color = 'grey', size = 0.1) +
+  scale_fill_viridis_d(name = 'Statewide rank') +
+  guides(fill = 'none') +
+  ggtitle('CC') +
+  theme(axis.text = element_blank())
+
+huc_watersheds %>%
+  mutate(
+    cc_16_13 = case_when(
+      cc_1_6 <= 2 ~ 1,
+      cc_1_6 >= 5 ~ 3,
+      TRUE ~ 2
+    )
+  ) %>%
+  mutate(diff = cc_16_13 - cc_1_3) %>%
+  ggplot() +
+  geom_histogram(aes(diff))
+
+huc_watersheds %>%
+  mutate(
+    cc_16_13 = case_when(
+      cc_1_6 <= 2 ~ 1,
+      cc_1_6 >= 5 ~ 3,
+      TRUE ~ 2
+    )
+  ) %>%
+  mutate(diff = cc_16_13 - cc_1_3) %>%
+  filter(diff != 0)
+
 
 # huc 12s - CO ------------------------------------------------------------
 
