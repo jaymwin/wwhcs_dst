@@ -186,7 +186,11 @@ ggplot() +
   geom_sf(data = wi_border %>% st_transform(st_crs(diff_rasters_stars)), fill = NA, size = 0.3) +
   facet_wrap(~band, ncol = 3) +
   theme_minimal() +
-  theme(axis.text = element_blank(), axis.title = element_blank()) +
+  theme(
+    axis.text = element_blank(), 
+    axis.title = element_blank(),
+    strip.text.x = element_text(color = 'white')
+    ) +
   # scale_fill_distiller(
   scale_fill_scico(
     # palette = 'RdYlGn', 
