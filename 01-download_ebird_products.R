@@ -15,7 +15,7 @@ source(here::here('99-source_functions.R'))
 
 # 70oq3a5ldvjq
 # need to set api key to access data
-# set_ebirdst_access_key("i56j72ppntq4", overwrite = TRUE)
+# set_ebirdst_access_key("9l0a8eptu9ar", overwrite = TRUE)
 
 # check ebirdst version
 packageVersion('ebirdst')
