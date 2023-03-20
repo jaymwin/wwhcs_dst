@@ -33,3 +33,35 @@ glimpse(ebird_sites)
 
 ebird_sites %>%
   write_xlsx(here::here('sedinger_sites_ebird_ranks.xlsx'))
+
+
+# eBird layers for Ben/Amanda ---------------------------------------------
+
+final_product_ebird <-
+  read_rds(here::here('outputs/priority_watersheds_ebird.rds'))
+glimpse(final_product_ebird)
+
+final_product_ebird %>%
+  st_write(here::here('wwhcs_dst_ebird.shp'))
+
+
+# find CC inputs which have already been through fuzzy membership
+cc_inputs <- 
+  dir_ls(here::here('data/ebird_inputs/ebird_cc_inputs'), glob = '*.tif') %>%
+  as_tibble() %>%
+  mutate(raster = basename(value)) %>%
+  filter(str_detect(raster, 'hunter|ecological|distribution_fuzzy'))
+
+# pull paths
+cc_inputs_paths <- 
+  cc_inputs %>%
+  pull(value)
+
+# stack raster layers and plot
+cc_inputs_stack <- 
+  cc_inputs_paths %>% 
+  stack()
+plot(cc_inputs_stack)
+
+cc_inputs_stack[[1]] %>%
+  writeRaster(here::here('cc_breeding_distribution.tif'))

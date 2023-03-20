@@ -74,7 +74,6 @@ cc_inputs_stack <-
   raster::crop(., wi_transformed) %>% # crop by WI border
   raster::mask(., wi_transformed)
 plot(cc_inputs_stack)
-cc_inputs_stack
 
 cc_inputs_stack[[2]]
 
