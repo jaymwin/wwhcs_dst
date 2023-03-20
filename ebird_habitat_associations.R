@@ -15,20 +15,16 @@ path <- get_species_path('buwtea')
 # load predictor dependence data
 pds <- load_pds(path, model = 'count')
 
-e <- ebirdst_extent(wi, t = c("12-01", "01-31"))
+e <- ebirdst_extent(wi, t = c("05-01", "08-15"))
 
 # for testing, run with 5 bootstrap iterations for speed
 # in practice, best to run with the default number of iterations (100)
-pd_smooth <- plot_pds(pds, "effort_distance_km", ext = e, n_bs = 5)
+pd_smooth <- plot_pds(pds, "mcd12q1_lccs1_fs_c31_1500_pland", ext = e, n_bs = 5)
 dplyr::glimpse(pd_smooth)
 
 ebirdst_predictors %>%
   pull(predictor)
 
-?ebirdst::load_pis()
+pis <- load_pis(path, model = 'count')
 
-?ebirdst::load_pds()
-
-?ebirdst::plot_pis()
-
-?ebirdst::plot_pds()
+plot_pis(pis, ext = e, plot = FALSE)
