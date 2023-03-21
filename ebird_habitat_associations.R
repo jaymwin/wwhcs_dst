@@ -10,12 +10,12 @@ wi <-
   filter(postal == 'WI')
 
 # or get the path if you already have the data downloaded
-path <- get_species_path('mallar3')
+path <- get_species_path('wooduc')
 
 predictors <- 
   ebirdst_predictors %>%
   filter(str_detect(predictor, 'mcd12q1|astwbd')) %>% 
-  filter(!lc_class_label %in% c('Ocean', 'Barren', 'Tundra', 'Unclassified', 'Permanent Snow and Ice', 'Evergreen Needleleaf Forests')) %>%
+  filter(!lc_class_label %in% c('Ocean', 'Barren', 'Tundra', 'Unclassified', 'Permanent Snow and Ice')) %>%
   pull(predictor)
 
 # load predictor dependence data
@@ -28,8 +28,8 @@ e <- ebirdst_extent(wi, t = c("05-01", "08-15"))
 hab_predictors <-
   ebirdst_predictors %>%
   filter(str_detect(predictor, 'mcd12q1|astwbd')) %>% 
-  filter(!lc_class_label %in% c('Ocean', 'Barren', 'Tundra', 'Unclassified', 'Permanent Snow and Ice', 'Evergreen Needleleaf Forests'))
-
+  filter(!lc_class_label %in% c('Ocean', 'Barren', 'Tundra', 'Unclassified', 'Permanent Snow and Ice')) %>%
+  
 
 for (i in seq_along(predictors)) {
   
@@ -65,13 +65,13 @@ for (i in seq_along(predictors)) {
       labs(
         x = NULL,
         y = 'Deviation E(Count)',
-        title = str_c('Mallard - ', pred_label)
+        title = str_c('Wood duck - ', pred_label)
       ) +
       theme_light()
   )
   
   try(
-    ggsave(str_c(here::here('ebird_partial_dependence_plots/mall - '), pred_label, '.png'), width = 5, height = 4, units = 'in')
+    ggsave(str_c(here::here('ebird_partial_dependence_plots/wood - '), pred_label, '.png'), width = 5, height = 4, units = 'in')
   )
   
 }
