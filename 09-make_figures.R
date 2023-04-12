@@ -558,6 +558,34 @@ p1 / p2 + plot_annotation(tag_levels = 'A')
 ggsave(here::here('figures/comparing_DSTs.png'), units = 'in', height = 5, width = 6)
 
 
+
+# expert habitat suitability maps -----------------------------------------
+
+# species x season expert rasters
+expert_cc_inputs <- 
+  dir_ls(here::here('data/rasters_from_gdb'), glob = '*.tif') %>%
+  as_tibble() %>%
+  mutate(raster_name = basename(value)) %>%
+  slice(1)
+
+# pull paths
+expert_cc_inputs_paths <- 
+  expert_cc_inputs %>%
+  pull(value)
+
+# stack raster layers and plot
+expert_cc_inputs_stack <- 
+  expert_cc_inputs_paths %>% 
+  raster()
+plot(expert_cc_inputs_stack)
+
+bwte_autumn_map <-expert_cc_inputs_stack %>%
+  mapview::mapview()
+
+mapshot(bwte_autumn_map, str_c(here::here(), '/', 'bwte_autumn_map.html'))
+
+
+
 #' library(tidyverse)
 #' 
 #' 
