@@ -36,7 +36,7 @@ spp <-
 
 # ebirdst data get saved here
 data_dir <- ebirdst_data_dir()
-dir_ls(ebirdst_data_dir(), recurse = TRUE)
+# dir_ls(ebirdst_data_dir(), recurse = TRUE)
 # fs::dir_delete(ebirdst_data_dir())
 
 # only download ebird data if it doesn't already exist

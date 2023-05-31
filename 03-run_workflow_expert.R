@@ -27,6 +27,26 @@ huc_watersheds <-
   here::here('data/dst_spatial.gpkg'), 
   layer = 'huc_watersheds'
   )
+
+# get area range in hectares of HUCs
+huc_watersheds %>%
+  st_transform(., 3071) %>%
+  mutate(
+    area = as.numeric(units::set_units(st_area(.), ha))
+  ) %>%
+  st_drop_geometry() %>%
+  summarise(
+    min = round(min(area), 0),
+    max = round(max(area), 0)
+  )
+
+huc_watersheds %>%
+  st_transform(., 3071) %>%
+  mutate(
+    area = as.numeric(units::set_units(st_area(.), ha))
+  ) %>%
+  filter(area == max(area) | area == min(area)) %>%
+  mapview::mapview()
   
 # ELs
 eco_landscapes <- 
