@@ -120,8 +120,8 @@ p_eco <-
   geom_sf(aes(fill = r), size = 0.2) +
   scale_fill_viridis_d(name = 'Ecological Landscape') +
   geom_sf(data = linestrings, size = 0.25) +
-  geom_sf(data = eco_centroid, pch = 21, color = 'black', fill = 'white', size = 3, stroke = 0.2) +
-  geom_sf_text(data = eco_centroid, aes(label = name), size = 1.5) +
+  geom_sf(data = eco_centroid, pch = 21, color = 'black', fill = 'white', size = 4, stroke = 0.2) +
+  geom_sf_text(data = eco_centroid, aes(label = name), size = 2) +
   guides(fill = 'none') +
   # ggtitle('A)') +
   theme_minimal() +
@@ -130,7 +130,7 @@ p_eco
 
 p_huc <- 
   huc_watersheds %>%
-  left_join(., eco_landscapes %>% st_drop_geometry() %>% select(ecological_landscape, r)) %>%
+  left_join(., eco_landscapes %>% st_drop_geometry() %>% dplyr::select(ecological_landscape, r)) %>%
   st_transform(., 3071) %>%
   ggplot() +
   geom_sf(aes(fill = r), size = 0.2) +
@@ -179,6 +179,12 @@ diff_rasters <-
 diff_rasters_stars <- diff_rasters %>%
   st_as_stars()
 
+# dose.labs <- c("spring", "breeding", "fall", "blah", "blah", "blah", "blah", "blah", "blah", "blah", "blah", "blah")
+# length(dose.labs)
+
+diff_rasters_stars
+str(diff_rasters_stars)
+
 # now plot
 ggplot() +
   geom_stars(data = diff_rasters_stars) +
@@ -189,7 +195,7 @@ ggplot() +
   theme(
     axis.text = element_blank(), 
     axis.title = element_blank(),
-    strip.text.x = element_text(color = 'white')
+    strip.text = element_blank()
     ) +
   # scale_fill_distiller(
   scale_fill_scico(

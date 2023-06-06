@@ -1,4 +1,6 @@
 
+select <- dplyr::select
+
 '%ni%' <- Negate('%in%')
 
 # weighted sum function to add rasters
@@ -164,7 +166,7 @@ bulk_download <- function(species) {
   
   ebirdst_download(
     species =  species,
-    tifs_only = TRUE,
+    tifs_only = FALSE,
     force = TRUE,
     show_progress = FALSE
   )

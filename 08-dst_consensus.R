@@ -135,9 +135,9 @@ p_overlap_watersheds <-
   top_watersheds %>% 
   mutate(
     type = case_when(
-      expert_top == 1 & ebird_top == 1 ~ 'Consensus',
-      expert_top == 1 & ebird_top == 0 ~ 'Expert',
-      expert_top == 0 & ebird_top == 1 ~ 'eBird'
+      expert_top == 1 & ebird_top == 1 ~ 'Both DSTs',
+      expert_top == 1 & ebird_top == 0 ~ 'Expert DST',
+      expert_top == 0 & ebird_top == 1 ~ 'eBird DST'
     )
   ) %>%
   filter(!is.na(type)) %>%
@@ -147,8 +147,9 @@ p_overlap_watersheds <-
   geom_sf(aes(fill = type), size = 0.2) +
   geom_sf(data = ecol, fill = NA, color = 'black', size = .24) +
   geom_sf_label(data = statewide_overlap_label, aes(label = scales::percent(round(label, 2))), size = 5, nudge_y = -20) +
-  scale_fill_viridis_d(name = 'Top\nwatershed', na.translate = F) +
-  theme(axis.text = element_blank(), axis.title = element_blank())
+  scale_fill_viridis_d(name = 'Agreement', na.translate = F) +
+  labs(title = 'Watersheds') +
+  theme(axis.text = element_blank(), axis.title = element_blank(), plot.title = element_text(hjust = 0.5, size = 11))
 p_overlap_watersheds
 
 # now plot this spatially
@@ -262,9 +263,9 @@ p_overlap_landscapes <-
   top_landscapes %>%
   mutate(
     type = case_when(
-      expert_top == 1 & ebird_top == 1 ~ 'Consensus',
-      expert_top == 1 & ebird_top == 0 ~ 'Expert',
-      expert_top == 0 & ebird_top == 1 ~ 'eBird'
+      expert_top == 1 & ebird_top == 1 ~ 'Both DSTs',
+      expert_top == 1 & ebird_top == 0 ~ 'Expert DST',
+      expert_top == 0 & ebird_top == 1 ~ 'eBird DST'
     )
   ) %>%
   filter(!is.na(type)) %>%
@@ -275,9 +276,11 @@ p_overlap_landscapes <-
   geom_sf(data = ecol, fill = NA, color = 'black', size = .24) +
   geom_sf_label(data = landscape_overlap_label, aes(label = scales::percent(round(label, 2))), size = 5, nudge_y = -20) +
   scale_fill_viridis_d(name = 'Top\necological\nlandscape', na.translate = F) +
-  theme(axis.text = element_blank(), axis.title = element_blank())
+  guides(fill = 'none') +
+  labs(title = 'Ecological landscapes') +
+  theme(axis.text = element_blank(), axis.title = element_blank(), plot.title = element_text(hjust = 0.5, size = 11))
 
-p_overlap_landscapes + p_overlap_watersheds + plot_annotation(tag_levels = 'A')
-ggsave(here::here('figures/agreement_watersheds_landscapes.png'), height = 3, width = 8, units = 'in', dpi = 600)
+p_overlap_landscapes + p_overlap_watersheds
+ggsave(here::here('figures/agreement_watersheds_landscapes.png'), height = 3, width = 7, units = 'in', dpi = 600)
 
 print('script 08 finished')

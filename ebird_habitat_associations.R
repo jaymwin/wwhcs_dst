@@ -12,6 +12,10 @@ wi <-
 # or get the path if you already have the data downloaded
 path <- get_species_path('wooduc')
 
+ebirdst_predictors %>%
+  filter(!is.na(lc_class)) %>%
+  print(n=Inf)
+
 predictors <- 
   ebirdst_predictors %>%
   filter(str_detect(predictor, 'mcd12q1|astwbd')) %>% 
