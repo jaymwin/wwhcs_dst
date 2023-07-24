@@ -83,12 +83,6 @@ cc_inputs_stack <-
   stack()
 plot(cc_inputs_stack)
 
-# save plot here as well
-tm <- tm_shape(cc_inputs_stack) +
-  tm_raster(style = 'cont', palette = 'viridis', title = 'Value', legend.reverse = TRUE)
-tm
-# tmap_save(tm, here::here('figures/cc_inputs_expert.png'), width = 5000, height = 3000, dpi = 1000)
-
 bio_layers <- stack(c(cc_inputs_stack[[2]], cc_inputs_stack[[1]], cc_inputs_stack[[5]]))
 names(bio_layers) <- c('Breeding', 'Fall', 'Spring')
 plot(bio_layers)
@@ -126,9 +120,6 @@ cc_layer <-
 )
 plot(cc_layer)
  
-tm_shape(cc_layer) +
-  tm_raster(style = 'cont', palette = 'viridis', title = 'Value', legend.reverse = TRUE)
-
 # save (then re-scale with fuzzy membership in arcgis pro)
 cc_layer_rescaled <- calc(cc_layer, fun = rescale_01)
 plot(cc_layer_rescaled)
@@ -151,11 +142,6 @@ cc_layer_rescaled %>%
 #     )
 #   )
 
-tm1 <- tm_shape(cc_layer_rescaled) +
-  tm_raster(style = 'cont', palette = 'inferno', title = 'Value', legend.reverse = TRUE) +
-  tm_layout(legend.position = c("right", "top"), main.title = 'CC')
-tm1
-
 
 # weighted sum - CO raster ------------------------------------------------
 
@@ -173,11 +159,6 @@ co_inputs_stack <-
   co_inputs_paths %>% 
   stack()
 plot(co_inputs_stack)
-
-tm <- tm_shape(co_inputs_stack) +
-  tm_raster(style = 'cont', palette = 'viridis', title = 'Value', legend.reverse = TRUE)
-tm
-# tmap_save(tm, here::here('figures/co_inputs_expert.png'), width = 5000, height = 3000, dpi = 1000)
 
 co_weights <- 
   co_inputs %>%
@@ -217,11 +198,6 @@ co_layer_rescaled %>%
 #       "APPEND_SUBDATASET=YES"
 #     )
 #   )
-
-tm1 <- tm_shape(co_layer_rescaled) +
-  tm_raster(style = 'cont', palette = 'inferno', title = 'Value', legend.reverse = TRUE) +
-  tm_layout(legend.position = c("right", "top"), main.title = 'co')
-tm1
 
 
 # ecological landscapes - CC ---------------------------------------------------

@@ -9,8 +9,7 @@ library(ebirdst)
 library(fs)
 
 # housekeeping, load source functions
-select <- dplyr::select
-theme_set(theme_light() + theme(panel.grid.minor = element_blank()))
+theme_set(theme_minimal())
 source(here::here('99-source_functions.R'))
 
 # 70oq3a5ldvjq
@@ -94,7 +93,6 @@ sp_path_df <-
   group_by(spp) %>%
   # file path
   slice(1)
-sp_path_df
 
 
 # now iterate through ebird species/season -----------------------

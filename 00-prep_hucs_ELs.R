@@ -9,7 +9,6 @@ library(raster)
 library(mapview)
 
 # set select and plotting
-select <- dplyr::select
 theme_set(theme_minimal())
 
 # other custom functions

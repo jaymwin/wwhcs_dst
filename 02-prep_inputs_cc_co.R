@@ -13,8 +13,7 @@ library(stars)
 library(patchwork)
 
 # housekeeping stuff
-select <- dplyr::select
-theme_set(theme_light() + theme(panel.grid.minor = element_blank()))
+theme_set(theme_minimal())
 
 source(here::here('99-source_functions.R'))
 
@@ -133,7 +132,7 @@ abundance_rasters_summary %>%
 abundance_rasters_summary %>%
   filter(str_detect(layer, 'rndu_fall')) %>%
   ggplot() +
-  geom_density(aes(x =  count)) +
+  geom_histogram(aes(x =  count)) +
   geom_vline(data = intervals %>% filter(str_detect(layer, 'rndu_fall')), aes(xintercept = value, color = interval), linetype = 2, size = 0.5) +
   # facet_wrap(~layer, scales = 'free', ncol = 3) +
   labs(
@@ -215,13 +214,6 @@ abundance_rasters <-
   pull(value) %>%
   stack()
 
-# tm <- 
-#   tm_shape(abundance_rasters[[4]]) +
-#   tm_raster(style = 'cont', palette = 'viridis', title = 'Count', legend.reverse = TRUE) +
-#   tm_layout(main.title = "MALL breeding abund.", main.title.position = "center")
-# tm
-# tmap_save(tm, here::here('figures/raw_ebird.png'), width = 3000, height = 3000, dpi = 1000)
-
 # manipulate to plot count histograms
 abundance_rasters_summary <- 
   abundance_rasters %>%
@@ -267,9 +259,6 @@ plot(abundance_rasters)
 
 # grab a raster from the original DST
 hunter_ras <- raster(here::here('data/expert_inputs/expert_cc_inputs/hunter_distribution.tif'))
-hunter_ras
-# tm_shape(hunter_ras) +
-#   tm_raster(style = 'cont', palette = "viridis")
 
 # find abundance rasters
 abundance_rasters <- 
@@ -393,14 +382,6 @@ ggplot() +
   theme(axis.text = element_blank(), axis.title = element_blank()) +
   scale_fill_viridis_c(name = 'Value', na.value = NA, option = 'cividis')
 ggsave(here::here('documentation/figures/ebird_distributions.jpg'), height = 5, width = 4, units = 'in')
-
-# tm <- tm_shape(fuzzy_abundance) +
-#   tm_raster(style = 'cont', palette = 'viridis', title = 'Value', legend.reverse = TRUE) +
-#   tm_shape(wi_border %>% st_transform(st_crs(fuzzy_abundance))) +
-#   tm_borders() +
-#   tm_facets(ncol = 3)
-# tm
-# tmap_save(tm, here::here('figures/ebird_distributions.png'), width = 5000, height = 6000, dpi = 1000)
 
 # create table of raster paths, and columns for species and season
 fuzzy_abundance <- 
@@ -531,14 +512,6 @@ ggplot() +
   scale_fill_viridis_c(name = 'Value', na.value = NA, option = 'magma')
 ggsave(here::here('documentation/figures/breeding_potential_rescaled.jpg'), height = 3.75, width = 4, units = 'in')
 
-
-# tm_shape(breeding_potential_rescaled) +
-#   tm_raster(style = 'cont', palette = 'viridis')
-# 
-# s <- stack(c(breeding_potential_rescaled, raster(str_c(here::here('data/ebird_inputs/ebird_cc_inputs'), '/', 'breeding_distribution_fuzzy.tif'))))
-# tm_shape(s) +
-#   tm_raster(style = 'cont', palette = 'viridis')
-
 # save breeding potential raster
 breeding_potential_rescaled %>%
   writeRaster(
@@ -548,4 +521,3 @@ breeding_potential_rescaled %>%
   )
 
 print('script 02 finished')
-
